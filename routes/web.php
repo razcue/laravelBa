@@ -26,6 +26,7 @@ Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
+    'share.authorization',
 ])->group(function () {
     Route::resource('users', UserController::class);
     Route::resource('products', ProductController::class);

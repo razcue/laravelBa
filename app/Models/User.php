@@ -66,4 +66,11 @@ class User extends Authenticatable
     {
         $query->orderBy('name');
     }
+
+    public function getPermissionArray() {
+        return $this->getAllPermissions()->mapWithKeys(function ($pr) {
+            return [$pr['name'] => true];
+        });
+    }
+
 }

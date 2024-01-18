@@ -1,7 +1,9 @@
 <template>
     <div class="sidemenu">
-        <Link class="sidemenu__link" :href="route('users.index')">Users</Link>
-        <Link class="sidemenu__link" :href="route('products.index')">Products</Link>
+        <Link v-if="$page?.props.authorization?.can['user-list']"
+            class="sidemenu__link" :href="route('users.index')">Users</Link>
+        <Link v-if="$page?.props.authorization?.can['product-list']"
+            class="sidemenu__link" :href="route('products.index')">Products</Link>
         <div class="border-t border-gray-200" />
         <p class="sidemenu__user-name">{{ $page?.props.auth?.user.name }}</p>
         <Link class="sidemenu__link" :href="route('profile.show')">Profile</Link>

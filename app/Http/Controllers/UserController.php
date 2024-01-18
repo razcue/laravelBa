@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -9,6 +10,19 @@ use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    function __construct()
+    {
+        $this->middleware('permission:user-list|user-create|user-edit|user-delete', ['only' => ['index']]);
+        $this->middleware('permission:user-create', ['only' => ['create','store']]);
+        $this->middleware('permission:user-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:user-delete', ['only' => ['destroy']]);
+    }
+
     public function index()
     {
         return Inertia::render('Users/Index', [
@@ -21,6 +35,9 @@ class UserController extends Controller
                     'role' => $user->role,
                     'image' => asset('images/' . ($user->image ?? env('NO_IMAGE_AVAILABLE_PATH', 'no_image.png'))),
                 ]),
+            'can' => [
+                'create_user' => Auth::user()->can('user-create', User::class),
+            ],
         ]);
     }
 

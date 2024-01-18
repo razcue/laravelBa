@@ -1,9 +1,13 @@
 <template>
     <div class="products">
-        <h1 class="products__title">Products</h1>
+        <h1 class="products__section-title">Products</h1>
         <Toast />
-        <Button v-if="activeUser?.hasPermissionTo('product-create')" label="Create Product" class="products__button products__button--create" @click="triggerCreate" />
-        <DataTable :value="products" class="products__table">
+        <Button v-if="$page?.props.authorization?.can['product-create']"
+            label="Create Product" class="products__button products__button--create" @click="triggerCreate" />
+        <DataTable :value="products" class="products__table"
+            v-if="$page?.props.authorization?.can['product-list']
+              || $page?.props.authorization?.can['product-edit']
+              || $page?.props.authorization?.can['product-delete']">
             <Column header="Title" class="products__column products__column--title">
                 <template #body="slotProps">
                     <img :src="slotProps.data.image" alt="Watch" width="70px" class="products__image">
@@ -12,12 +16,13 @@
             </Column>
             <Column field="description" header="Description" class="products__column products__column--description"></Column>
             <Column field="price" header="Price" class="products__column products__column--price"></Column>
-            <Column header="Actions" class="products__column products__column--actions">
+            <Column header="Actions" class="products__column products__column--actions"
+                v-if="$page?.props.authorization?.can['product-edit'] || $page?.props.authorization?.can['product-delete']">
                 <template #body="slotProps">
                     <Button icon="pi pi-pencil" class="products__button products__button--edit"
-                        v-if="activeUser?.hasPermissionTo('product-edit')" @click="triggerEdit(slotProps.data)" />
+                        v-if="$page?.props.authorization?.can['product-edit']" @click="triggerEdit(slotProps.data)" />
                     <Button icon="pi pi-trash" class="products__button products__button--delete"
-                        v-if="activeUser?.hasPermissionTo('product-delete')" @click="triggerDelete(slotProps.data)" />
+                        v-if="$page?.props.authorization?.can['product-delete']" @click="triggerDelete(slotProps.data)" />
                 </template>
             </Column>
         </DataTable>
@@ -30,15 +35,13 @@ import Column from 'primevue/column';
 import Button from 'primevue/button';
 import Toast from 'primevue/toast';
 import { useToast } from "primevue/usetoast";
-import { router, usePage } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 defineProps({
     products: Object,
 })
 
 const toast = useToast();
-
-const { activeUser: user } = usePage().props;
 
 const triggerEdit = (item) => {
     router.visit(route('products.edit', item.id));
@@ -58,16 +61,22 @@ const triggerCreate = () => {
 
 <style lang="scss">
 .products {
+    &__section-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #3F51B5;
+        margin-bottom: 16px;
+    }
+
     &__title {
         font-size: 18px;
-        font-weight: 500;
-        color: #3F51B5;
+        color:#212121;
+        display:inline-block;
     }
 
     &__table {
         width: 100%;
         margin-top: 16px;
-        border-collapse: collapse;
 
         .products__column {
             padding: 16px;
@@ -83,19 +92,16 @@ const triggerCreate = () => {
             &--description,
             &--price,
             &--actions {
-                text-align: center;
+                text-align: left;
+                padding-top: 12px;
+                padding-bottom: 12px;
             }
         }
+    }
 
-        &__image {
-            border-radius: 50%;
-            margin-right: 16px;
-        }
-
-        &__title {
-            font-size: 16px;
-            color: #212121;
-        }
+    &__image {
+        margin: 0 0 0 25%;
+        border-radius: 4px;
     }
 
     &__button {

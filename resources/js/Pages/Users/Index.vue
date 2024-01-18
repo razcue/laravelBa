@@ -1,9 +1,13 @@
 <template>
     <div class="users">
-        <h1 class="users__title">Users</h1>
+        <h1 class="users__section-title">Users</h1>
         <Toast />
-        <Button label="Create User" class="users__button users__button--create" @click="triggerCreate" />
-        <DataTable :value="users" class="users__table">
+        <Button v-if="$page?.props.authorization?.can['user-create']"
+            label="Create User" class="users__button users__button--create" @click="triggerCreate" />
+        <DataTable :value="users" class="users__table"
+            v-if="$page?.props.authorization?.can['user-list']
+              || $page?.props.authorization?.can['user-edit']
+              || $page?.props.authorization?.can['user-delete']">
             <Column header="Name" class="users__column users__column--name">
                 <template #body="slotProps">
                     <img :src="slotProps.data.image" alt="Watch" width="70px" class="users__image">
@@ -12,10 +16,13 @@
             </Column>
             <Column field="role.label" header="Role" class="users__column users__column--role"></Column>
             <Column field="email" header="Email" class="users__column users__column--email"></Column>
-            <Column header="Actions" class="users__column users__column--actions">
+            <Column header="Actions" class="users__column users__column--actions"
+                v-if="$page?.props.authorization?.can['user-edit'] || $page?.props.authorization?.can['user-delete']">
                 <template #body="slotProps">
-                    <Button icon="pi pi-pencil" class="users__button users__button--edit" @click="triggerEdit(slotProps.data)" />
-                    <Button icon="pi pi-trash" class="users__button users__button--delete" @click="triggerDelete(slotProps.data)" />
+                    <Button icon="pi pi-pencil" class="users__button users__button--edit"
+                        v-if="$page?.props.authorization?.can['user-edit']" @click="triggerEdit(slotProps.data)" />
+                    <Button icon="pi pi-trash" class="users__button users__button--delete"
+                        v-if="$page?.props.authorization?.can['user-delete']" @click="triggerDelete(slotProps.data)" />
                 </template>
             </Column>
         </DataTable>
@@ -54,16 +61,22 @@ const triggerCreate = () => {
 
 <style lang="scss">
 .users {
+    &__section-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #3F51B5;
+        margin-bottom: 16px;
+    }
+
     &__name {
         font-size: 18px;
-        font-weight: 500;
-        color: #3F51B5;
+        color:#212121;
+        display:inline-block;
     }
 
     &__table {
         width: 100%;
         margin-top: 16px;
-        border-collapse: collapse;
 
         .users__column {
             padding: 16px;
@@ -79,19 +92,16 @@ const triggerCreate = () => {
             &--role,
             &--email,
             &--actions {
-                text-align: center;
+                text-align: left;
+                padding-top: 12px;
+                padding-bottom: 12px;
             }
         }
+    }
 
-        &__image {
-            border-radius: 50%;
-            margin-right: 16px;
-        }
-
-        &__name {
-            font-size: 16px;
-            color: #212121;
-        }
+    &__image {
+        margin: 0 0 0 25%;
+        border-radius: 4px;
     }
 
     &__button {
