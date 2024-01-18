@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,12 +19,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return redirect('/products');
 });
 
 Route::middleware([
@@ -29,7 +27,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::resource('users', UserController::class);
+    Route::resource('products', ProductController::class);
+    Route::post('/upload', [ImageController::class, 'upload']);
 });
