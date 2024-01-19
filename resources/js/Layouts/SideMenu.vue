@@ -5,8 +5,7 @@
         <Link v-if="$page?.props.authorization?.can['product-list']"
             class="sidemenu__link" :href="route('products.index')">Products</Link>
         <div class="border-t border-gray-200" />
-        <p class="sidemenu__user-name">{{ $page?.props.auth?.user.name }}</p>
-        <Link class="sidemenu__link" :href="route('profile.show')">Profile</Link>
+        <p class="sidemenu__user-name">Hello {{ $page?.props.auth?.user?.name }}</p>
         <form @submit.prevent="logout">
             <Button class="sidemenu__link" type="submit" label="Log Out" />
         </form>

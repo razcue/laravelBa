@@ -1,6 +1,6 @@
 <template>
     <div class="layout">
-        <SideMenu v-if="$page?.props.auth" class="layout__sidemenu"/>
+        <SideMenu v-if="$page?.props.auth.user" class="layout__sidemenu"/>
         <div class="layout__slot">
             <slot/>
         </div>
@@ -17,14 +17,14 @@ import SideMenu from "@/Layouts/SideMenu.vue";
     height: 100vh;
 
     &__sidemenu {
-        width: 250px;
         background-color: #f5f5f5;
         overflow: auto;
+        min-width: max(200px, 16vw);
     }
 
     &__slot {
         padding: 20px;
-        flex-grow: 1;
+        flex: auto;
         overflow: auto;
         background-color: #fff;
     }

@@ -12,12 +12,13 @@
                     <InputText v-model="user.email" placeholder="Email" />
                     <Password v-model="user.password" placeholder="Password" />
                     <Dropdown v-model="user.role_id" :options="roleOptions"
-                        option-value="id" optionLabel="name" placeholder="Select a Role"/>
+                        option-value="id" optionLabel="label" placeholder="Select a Role"/>
                     <div class="create-user__form-image-input-wrapper">
                         <FileUpload v-model="user.image" mode="basic" :auto="true"
                             :chooseLabel="user.image ? 'Change Photo' : 'Choose Photo'"
                             url="/upload" accept="image/*" label="Photo" @upload="handleUpload" />
-                        <img class="create-user__form-image-input-wrapper-preview" v-if="user.image" :src="user.image"></img>
+                        <img class="create-user__form-image-input-wrapper-preview"
+                            v-if="user.image" :src="user.image"></img>
                     </div>
                 </div>
                 <div class="create-user__submit">
@@ -59,13 +60,10 @@ export default {
     props: {
         user: Object,
         action: String,
+        rolesDataSet: Object,
     },
     setup(props) {
-        // todo build endpoint for this
-        const roleOptions = ref([
-            { name: 'Manager', id: 1 },
-            { name: 'Revisor', id: 2 }
-        ])
+        const roleOptions = ref(props.rolesDataSet);
 
         const toast = useToast();
 

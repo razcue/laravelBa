@@ -33,7 +33,8 @@ class UserController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                     'role' => $user->role,
-                    'image' => asset('images/' . ($user->image ?? env('NO_IMAGE_AVAILABLE_PATH', 'no_image.png'))),
+                    'image' =>
+                        asset('images/' . ($user->image ?? env('NO_IMAGE_AVAILABLE_PATH', 'no_image.png'))),
                 ]),
             'can' => [
                 'create_user' => Auth::user()->can('user-create', User::class),
@@ -43,7 +44,14 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Users/Form', ['action' => 'Create']);
+        return Inertia::render('Users/Form', [
+            'action' => 'Create',
+            'rolesDataSet' => Role::all(['id', 'name'])
+                ->transform(fn ($role) => [
+                    'id' => $role->id,
+                    'label' => ucwords($role->name),
+                ]),
+        ]);
     }
 
     public function store(Request $request)
@@ -62,10 +70,16 @@ class UserController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'role_id' => $user->role_id,
-                'image' => $user->image ? asset('images/' . $user->image) : null,
+                'role_id' => Role::findByName($user->getRoleNames()[0], 'web')->id,
+                'image' =>
+                    asset('images/' . ($user->image ?? env('NO_IMAGE_AVAILABLE_PATH', 'no_image.png'))),
             ],
             'action' => 'Edit',
+            'rolesDataSet' => Role::all(['id', 'name'])
+                ->transform(fn ($role) => [
+                    'id' => $role->id,
+                    'label' => ucwords($role->name),
+                ]),
         ]);
     }
 

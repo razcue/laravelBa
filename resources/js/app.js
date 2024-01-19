@@ -9,6 +9,7 @@ import 'primeicons/primeicons.css';
 import PrimeVue from 'primevue/config';
 import ToastService from 'primevue/toastservice';
 import Layout from "@/Layouts/Layout.vue";
+import 'primevue/resources/themes/lara-light-blue/theme.css';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
