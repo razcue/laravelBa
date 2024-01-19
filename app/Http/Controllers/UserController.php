@@ -56,7 +56,14 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $user = User::create($request->all());
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:8',
+            'role_id' => 'required|numeric',
+        ]);
+
+        $user = User::create($validatedData);
         $role = Role::find($request->input('role_id'));
         $user->assignRole($role);
 
@@ -85,7 +92,14 @@ class UserController extends Controller
 
     public function update(User $user, Request $request)
     {
-        $user->update($request->all());
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:8',
+            'role_id' => 'required|numeric',
+        ]);
+
+        $user->update($validatedData);
         DB::table('model_has_roles')->where('model_id', $user->id)->delete();
         $role = Role::find($request->input('role_id'));
         $user->assignRole($role);

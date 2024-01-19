@@ -61,6 +61,7 @@ export default {
         user: Object,
         action: String,
         rolesDataSet: Object,
+        errors: Object,
     },
     setup(props) {
         const roleOptions = ref(props.rolesDataSet);
@@ -72,6 +73,18 @@ export default {
         watch(() => props.action, (newAction) => {
             if (newAction === 'Create') {
                 Object.assign(user, emptyUser);
+            }
+        });
+
+        watch(() => props.errors, (newErrors) => {
+            const errorArray = Object.values(newErrors);
+            if (errorArray && errorArray.length) {
+                toast.add({
+                    severity: 'error',
+                    summary: 'Model Errors',
+                    detail: errorArray.join('\n'),
+                    life: 3000 + (1000 * errorArray.length)
+                });
             }
         });
 

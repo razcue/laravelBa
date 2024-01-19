@@ -60,6 +60,7 @@ export default {
     props: {
         product: Object,
         action: String,
+        errors: Object,
     },
     setup(props) {
         const toast = useToast();
@@ -69,6 +70,18 @@ export default {
         watch(() => props.action, (newAction) => {
             if (newAction === 'Create') {
                 Object.assign(product, emptyProduct);
+            }
+        });
+
+        watch(() => props.errors, (newErrors) => {
+            const errorArray = Object.values(newErrors);
+            if (errorArray && errorArray.length) {
+                toast.add({
+                    severity: 'error',
+                    summary: 'Model Errors',
+                    detail: errorArray.join('\n'),
+                    life: 3000 + (1000 * errorArray.length)
+                });
             }
         });
 

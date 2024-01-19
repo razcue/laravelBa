@@ -43,7 +43,12 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        Product::create($request->all());
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        Product::create($validatedData);
 
         return to_route('products.index', [], 303);
     }
@@ -64,7 +69,12 @@ class ProductController extends Controller
 
     public function update(Product $product, Request $request)
     {
-        $product->update($request->all());
+        $validatedData = $request->validate([
+            'title' => 'required|max:255',
+            'price' => 'required|numeric',
+        ]);
+
+        $product->update($validatedData);
 
         return to_route('products.index', [], 303);
     }
