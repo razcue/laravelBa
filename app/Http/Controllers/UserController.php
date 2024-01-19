@@ -32,7 +32,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'role' => $user->role,
+                    'role' => ucwords($user->getRoleNames()[0]),
                     'image' =>
                         asset('images/' . ($user->image ?? env('NO_IMAGE_AVAILABLE_PATH', 'no_image.png'))),
                 ]),

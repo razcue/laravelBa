@@ -14,7 +14,7 @@
                     <p class="users__name">{{slotProps.data.name}}</p>
                 </template>
             </Column>
-            <Column field="role.label" header="Role" class="users__column users__column--role"></Column>
+            <Column field="role" header="Role" class="users__column users__column--role"></Column>
             <Column field="email" header="Email" class="users__column users__column--email"></Column>
             <Column header="Actions" class="users__column users__column--actions"
                 v-if="$page?.props.authorization?.can['user-edit'] || $page?.props.authorization?.can['user-delete']">
