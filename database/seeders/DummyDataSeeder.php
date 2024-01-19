@@ -13,11 +13,12 @@ class DummyDataSeeder extends Seeder
      */
     public function run()
     {
-        // Create 5 users using the UserFactory
-        User::factory()->withRole('manager')->create();
-        User::factory()->count(4)->withRole('revisor')->create();
+        // Create users using the UserFactory
+        User::factory()->count(env('DUMMY_DATA_SEEDER_USERS_QUANTITY', 2))
+            ->withRole('revisor')->create();
 
-        // Create 25 products using the ProductFactory
-        Product::factory()->count(25)->create();
+        // Create products using the ProductFactory
+        Product::factory()->count(env('DUMMY_DATA_SEEDER_PRODUCTS_QUANTITY', 5))
+            ->create();
     }
 }
